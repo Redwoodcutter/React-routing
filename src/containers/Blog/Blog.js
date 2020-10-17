@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import axios from 'axios';
+//import axios from 'axios';
 import axios from '../../axios';
 
 import Post from '../../components/Post/Post';
@@ -10,52 +10,46 @@ import './Blog.css';
 class Blog extends Component {
     state = {
         posts: [],
-        selectedPostId: null,
-        error: false
+        selectedPostId: null
     }
 
-    componentDidMount () {
-        axios.get( '/posts' )
-            .then( response => {
-                const posts = response.data.slice(0, 4);
-                const updatedPosts = posts.map(post => {
-                    return {
-                        ...post,
-                        author: 'Max'
-                    }
-                });
-                this.setState({posts: updatedPosts});
-                // console.log( response );
-            } )
-            .catch(error => {
-                // console.log(error);
-                this.setState({error: true});
-            });
+    //Getting Json File
+    componentDidMount(){
+     axios.get('/posts')
+        .then(response =>{
+            const posts = response.data.slice(0,4);
+            const updatedPost = posts.map(post=>{
+                return{
+                    ...post,
+                    author: 'Cezmi'
+                }
+            })
+            this.setState({posts: updatedPost});
+            // console.log(response);
+        });
     }
-
-    postSelectedHandler = (id) => {
+    //Selected id function
+    postSelectedHandler = (id) =>{
         this.setState({selectedPostId: id});
     }
 
     render () {
-        let posts = <p style={{textAlign: 'center'}}>Something went wrong!</p>;
-        if (!this.state.error) {
-            posts = this.state.posts.map(post => {
+        const posts = this.state.posts.map(
+            post=>{
                 return <Post 
-                    key={post.id} 
-                    title={post.title} 
-                    author={post.author}
-                    clicked={() => this.postSelectedHandler(post.id)} />;
-            });
-        }
-
+                key={post.id} 
+                title={post.title} 
+                author={post.author}
+                clicked={()=>this.postSelectedHandler(post.id)}/>
+            }
+        );
         return (
             <div>
                 <section className="Posts">
                     {posts}
                 </section>
                 <section>
-                    <FullPost id={this.state.selectedPostId} />
+                    <FullPost id={this.state.selectedPostId} /> 
                 </section>
                 <section>
                     <NewPost />
